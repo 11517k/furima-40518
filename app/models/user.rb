@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :nickname, :birth_date, :first_name, :last_name, :first_name_kana, :last_name_kana, presence: true
 
   # 全角のバリデーション
-  validates :first_name, :last_name, format: { with: /\A[ぁ-んァ-ン一-龥々]+\z/, message: 'is invalid. Input full-width characters' }
+  validates :first_name, :last_name, format: { with: /\A[ぁ-んァ-ヶ一-龥々ー]+\z/, message: 'is invalid. Input full-width characters' }
 
   # カタカナのバリデーション
   validates :first_name_kana, :last_name_kana,
