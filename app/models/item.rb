@@ -9,6 +9,7 @@ class Item < ApplicationRecord
   belongs_to :prefecture
   belongs_to :days_to_ship
 
-  validates :image, :item_name, :description, presence: true
-  validates :category_id, :item_condition_id, :shipping_fee_payer_id, :prefecture_id, :days_to_ship_id, numericality: { other_than: 1 } 
+  validates :image, :price, :item_name, :description, presence: true
+  validates :category_id, :item_condition_id, :shipping_fee_payer_id, :prefecture_id, :days_to_ship_id, presence: true, numericality: { other_than: 1 , message: "can't be blank"}
+  validates :price, presence: true, format: { with: /\A[0-9]+\z/, message: 'is invalid. Input half-width characters.' }, numericality: { greater_than_or_equal_to: 300, less_than_or_equal_to: 9999999, message: 'is out of setting range' }
 end

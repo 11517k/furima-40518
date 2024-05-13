@@ -116,6 +116,34 @@ RSpec.describe User, type: :model do
         @user.valid?
         expect(@user.errors.full_messages).to include('First name kana is invalid. Input full-width katakana characters')
       end
+
+      it 'priceが半角数字ではない場合登録できないこと' do
+        @item.price = "３００"
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is invalid. Input half-width characters.')
+      end
+
+      it 'priceが300だと保存できること' do
+        @item.price = 300
+        expect(@item).to be_valid
+      end
+
+      it 'priceが9999999だと保存できること' do
+        @item.price = 9999999
+        expect(@item).to be_valid
+      end
+
+      it 'priceが299以下だと登録できないこと' do
+        @item.price = 299
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is out of setting range')
+      end
+
+      it 'priceが10000000以上だと登録できないこと' do
+        @item.price = 10000000
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is out of setting range')
+      end
     end
   end
 end
