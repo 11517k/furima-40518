@@ -66,6 +66,39 @@ RSpec.describe Item, type: :model do
         expect(@item.errors.full_messages).to include("Days to ship can't be blank")
       end
 
+      it 'priceが半角数字ではない場合登録できないこと' do
+        @item.price = "３００"
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is invalid. Input half-width characters.')
+      end
+
+      it 'priceが300だと保存できること' do
+        @item.price = 300
+        expect(@item).to be_valid
+      end
+
+      it 'priceが9999999だと保存できること' do
+        @item.price = 9999999
+        expect(@item).to be_valid
+      end
+
+      it 'priceが299以下だと登録できないこと' do
+        @item.price = 299
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is out of setting range')
+      end
+
+      it 'priceが10000000以上だと登録できないこと' do
+        @item.price = 10000000
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is out of setting range')
+      end
+
+      it 'userが紐付いていない場合は登録できない' do
+        @item.user = nil
+        @item.valid?
+        expect(@item.errors.full_messages).to include('User must exist')
+      end
     end
   end
 end
