@@ -36,15 +36,15 @@ class ItemsController < ApplicationController
     end
   end
 
+  private
+
   def set_item
     @item = Item.find(params[:id])
   end
 
   def move_to_index
-    redirect_to root_path if current_user.id != @item.user_id
+    redirect_to root_path unless current_user.id == @item.user_id
   end
-
-  private
 
   def item_params
     params.require(:item).permit(:image, :item_name, :price, :description, :category_id, :item_condition_id,
