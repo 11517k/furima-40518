@@ -36,7 +36,6 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    @item.update(item_params)
     @item.destroy
     redirect_to root_path
   end
