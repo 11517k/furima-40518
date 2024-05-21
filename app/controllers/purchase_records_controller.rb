@@ -1,7 +1,7 @@
 class PurchaseRecordsController < ApplicationController
-  before_action :authenticate_user!, only: [:index, :new, :create]
+  before_action :authenticate_user!, only: [:index, :create]
   before_action :set_item, only: [:index, :create]
-  before_action :redirect_to_root_if_owner_or_sold, only: [:index, :new, :create]
+  before_action :redirect_to_root_if_owner_or_sold, only: [:index, :create]
 
   def index
     gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
@@ -9,7 +9,6 @@ class PurchaseRecordsController < ApplicationController
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @purchase_delivery = PurchaseDelivery.new(purchase_delivery_params)
     if @purchase_delivery.valid? 
       pay_item
@@ -28,7 +27,7 @@ class PurchaseRecordsController < ApplicationController
   end
 
   def purchase_delivery_params
-    params.require(:purchase_delivery).permit(:price, :postal_code, :prefecture_id, :city, :address, :building, :phone_number).merge(token: params[:token], user_id: current_user.id, item_id: @item.id)
+    params.require(:purchase_delivery).permit(:postal_code, :prefecture_id, :city, :address, :building, :phone_number).merge(token: params[:token], user_id: current_user.id, item_id: @item.id)
   end
 
   def pay_item

@@ -2,14 +2,14 @@ require 'rails_helper'
 
 RSpec.describe PurchaseDelivery, type: :model do
   before do
-    @purchase_delivery = FactoryBot.build(:purchase_delivery)
+    user = FactoryBot.create(:user)
+    item = FactoryBot.create(:item)
+    @purchase_delivery = FactoryBot.build(:purchase_delivery, user_id: user.id, item_id: item.id)
+    sleep(1)
   end
 
   describe '配送先情報の保存' do
     context '内容に問題がない場合' do
-      it "priceとtokenがあれば保存ができること" do
-        expect(@purchase_delivery).to be_valid
-      end
 
       it '建物名がなくても保存できる' do
         @purchase_delivery.building = ''
@@ -63,7 +63,31 @@ RSpec.describe PurchaseDelivery, type: :model do
       it '電話番号がハイフンを含むと保存できない' do
         @purchase_delivery.phone_number = '090-1234-5678'
         @purchase_delivery.valid?
-        expect(@purchase_delivery.errors.full_messages).to include("Phone number is invalid. Input only number")
+        expect(@purchase_delivery.errors.full_messages).to include("Phone number Input only number")
+      end
+
+      it '電話番号が12桁以上では購入できない' do
+        @purchase_delivery.phone_number = '123456789012'
+        @purchase_delivery.valid?
+        expect(@purchase_delivery.errors.full_messages).to include("Phone number is too long")
+      end
+
+      it '電話番号に半角数字以外が含まれている場合は購入できない' do
+        @purchase_delivery.phone_number = '123abd7890'
+        @purchase_delivery.valid?
+        expect(@purchase_delivery.errors.full_messages).to include("Phone number Input only number")
+      end
+
+      it 'userが紐付いていなければ購入できない' do
+        @purchase_delivery.user_id = nil
+        @purchase_delivery.valid?
+        expect(@purchase_delivery.errors.full_messages).to include("User can't be blank")
+      end
+
+      it 'itemが紐付いていなければ購入できない' do
+        @purchase_delivery.item_id = nil
+        @purchase_delivery.valid?
+        expect(@purchase_delivery.errors.full_messages).to include("Item can't be blank")
       end
 
       it 'トークンが空では保存できない' do
