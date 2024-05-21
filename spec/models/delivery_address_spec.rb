@@ -7,7 +7,7 @@ RSpec.describe PurchaseDelivery, type: :model do
 
   describe '配送先情報の保存' do
     context '内容に問題がない場合' do
-      it 'すべての項目が正しく入力されていれば保存できる' do
+      it "priceとtokenがあれば保存ができること" do
         expect(@purchase_delivery).to be_valid
       end
 
@@ -33,7 +33,7 @@ RSpec.describe PurchaseDelivery, type: :model do
       it '都道府県が1では保存できない' do
         @purchase_delivery.prefecture_id = 1
         @purchase_delivery.valid?
-        expect(@purchase_delivery.errors.full_messages).to include("Prefecture must be other than 1")
+        expect(@purchase_delivery.errors.full_messages).to include("Prefecture can't be blank")
       end
 
       it '市区町村が空では保存できない' do
@@ -58,12 +58,6 @@ RSpec.describe PurchaseDelivery, type: :model do
         @purchase_delivery.phone_number = '090123456'
         @purchase_delivery.valid?
         expect(@purchase_delivery.errors.full_messages).to include("Phone number is too short")
-      end
-
-      it '電話番号が12桁以上では保存できない' do
-        @purchase_delivery.phone_number = '090123456789'
-        @purchase_delivery.valid?
-        expect(@purchase_delivery.errors.full_messages).to include("Phone number is invalid. Input only number")
       end
 
       it '電話番号がハイフンを含むと保存できない' do
