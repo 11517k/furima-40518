@@ -10,7 +10,10 @@ RSpec.describe PurchaseDelivery, type: :model do
 
   describe '配送先情報の保存' do
     context '内容に問題がない場合' do
-
+      it 'すべての項目が正しく入力されていれば保存できること' do
+        expect(@purchase_delivery).to be_valid
+      end
+      
       it '建物名がなくても保存できる' do
         @purchase_delivery.building = ''
         expect(@purchase_delivery).to be_valid
