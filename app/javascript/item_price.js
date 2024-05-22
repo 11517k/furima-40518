@@ -1,4 +1,4 @@
-window.addEventListener('turbo:load', function(){
+function calculateFeeAndProfit() {
 const priceInput = document.getElementById("item-price");
 priceInput.addEventListener("input", () => {
   const inputValue = priceInput.value;
@@ -13,4 +13,7 @@ addTaxDom.innerHTML = fee;
 const profitDom = document.getElementById("profit"); 
   profitDom.innerHTML = profit;
 })
-})
+}
+
+window.addEventListener('turbo:load', calculateFeeAndProfit);
+window.addEventListener('turbo:render', calculateFeeAndProfit);
